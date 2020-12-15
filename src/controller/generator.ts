@@ -87,7 +87,7 @@ export class Generator {
 			height = tempTemplate.height
 		}
 
-		let imgDataUrl = ImageRenderer.renderImage(svgString, width, height, containerId, imgMode)
+		let imgDataUrl = ImageRenderer.renderImage(svgString, width, height, imgMode)
 
 
 		try {
