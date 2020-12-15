@@ -47,7 +47,6 @@
         "@types/node": "^14.14.13",
         "babel-loader": "^8.2.2",
         "buffer": "^6.0.3",
-        "canvas": "^2.6.1",
         "jsdom": "^16.4.0",
         "jsdom-global": "^3.0.2",
         "ts-loader": "^8.0.12",
@@ -56,5 +55,7 @@
         "webpack-cli": "^4.1.0",
         "webpack-dev-server": "^3.11.0"
     },
-    "dependencies": {}
+    "dependencies": {
+        "canvas": "^2.6.1"
+    }
 }

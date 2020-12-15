@@ -13,13 +13,4 @@ export declare class ImageRenderer {
      * @returns image
      */
     static renderImage(svgString: string, width: number, height: number, imgMode: string): string;
-    /**
-     * Renders img obj
-     * @param img
-     * @param data
-     * @param width
-     * @param height
-     * @returns img obj
-     */
-    private static renderImgObj;
 }
