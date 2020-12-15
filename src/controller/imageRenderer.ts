@@ -15,47 +15,32 @@ export class ImageRenderer {
 	 * @param [generateLink]
 	 * @returns image
 	 */
-	public static renderImage(svgString: string, width: number, height: number, containerId: string, imgMode: string, generateLink?: boolean): void {
+	public static renderImage(svgString: string, width: number, height: number, containerId: string, imgMode: string): string {
 
 		let xml = svgString,
 			parser = new DOMParser(),
 			result: XMLDocument = parser.parseFromString(xml, 'text/xml'),
-			inlineSVG = result.getElementsByTagName('svg')[0];
+			inlineSVG = result.getElementsByTagName('svg')[0],
+			exportString: string = "empty";
+
+		const jsdom = require("jsdom");
+		const { JSDOM } = jsdom;
+		const vdom = new JSDOM(`<!DOCTYPE html><body><div id="`+ containerId +`"></div><body>`);
+		const vdocument = vdom.window;
 
 		inlineSVG.setAttribute('width', width.toString());
 		inlineSVG.setAttribute('height', height.toString());
 
 		let data = "data:image/svg+xml;charset=utf-8;base64, " + btoa(new XMLSerializer().serializeToString(inlineSVG)),
 			img = new Image(),
-			img2 = new Image(),
-			canvas = document.createElement('canvas'),
+			canvas = vdocument.createElement('canvas'),
 			imgAtr: string,
-			container = document.getElementById(containerId)!
+			container = vdocument.getElementById(containerId)!
 			;
 
 		switch (imgMode) {
 			case 'svg':
-				width = width / 4;
-				height = height / 4;
-				img.setAttribute('src', data);
-				img.setAttribute('width', width.toString());
-				img.setAttribute('height', height.toString());
-
-				container.innerHTML = "";
-
-				container.appendChild(img);
-
-				if (generateLink) {
-
-					let downloadLink = document.createElement('a')
-
-					downloadLink.setAttribute('href', data);
-					downloadLink.setAttribute('download', 'image.' + imgMode);
-					downloadLink.innerHTML = 'Download Link';
-
-					container.appendChild(downloadLink);
-				}
-				return;
+				return data;
 
 			case 'png':
 				imgAtr = 'image/png';
@@ -92,7 +77,7 @@ export class ImageRenderer {
 			throw new Error("The Container " + containerId + " is not defined!");
 		}
 
-		let renderCanvas = <HTMLCanvasElement>document.getElementById('render-canvas' + containerId)!;
+		let renderCanvas = <HTMLCanvasElement>vdocument.getElementById('render-canvas' + containerId)!;
 
 		let ctx: CanvasRenderingContext2D | null;
 		let imgDataUrl: string;
@@ -105,27 +90,12 @@ export class ImageRenderer {
 
 			imgDataUrl = renderCanvas.toDataURL(imgAtr, 1.0);
 
-			width = width / 4;
-			height = height / 4;
-			img2.setAttribute('src', imgDataUrl);
-			img2.setAttribute('width', width.toString());
-			img2.setAttribute('height', height.toString());
-
-			container.innerHTML = "";
-
-			container.appendChild(img2);
-
-			if (generateLink) {
-
-				let downloadLink = document.createElement('a')
-
-				downloadLink.setAttribute('href', imgDataUrl);
-				downloadLink.setAttribute('download', 'image.' + imgMode);
-				downloadLink.innerHTML = 'Download Link';
-
-				container.appendChild(downloadLink);
-			}
+			exportString = imgDataUrl;
 		}
+
+		dispatchEvent(new Event('load'));
+
+		return exportString;
 	}
 
 }

@@ -28,7 +28,8 @@ export class Generator {
 		let svgString: string,
 			width: number,
 			height: number,
-			tempTemplate: Template;
+			tempTemplate: Template,
+			container: HTMLDivElement;
 
 		if (teamName === "") {
 			teamName = "Community";
@@ -86,7 +87,36 @@ export class Generator {
 			height = tempTemplate.height
 		}
 
-		ImageRenderer.renderImage(svgString, width, height, containerId, imgMode, generateLink)
+		let imgDataUrl = ImageRenderer.renderImage(svgString, width, height, containerId, imgMode)
+
+
+		try {
+			container = <HTMLDivElement>document.getElementById(containerId);
+		} catch (error) {
+			throw new Error("The container "+ containerId +" is not defined!");
+		}
+
+		let img2 = new Image();
+		width = width / 4;
+		height = height / 4;
+		img2.setAttribute('src', imgDataUrl);
+		img2.setAttribute('width', width.toString());
+		img2.setAttribute('height', height.toString());
+
+		container.innerHTML = "";
+
+		container.appendChild(img2);
+
+		if (generateLink) {
+
+			let downloadLink = document.createElement('a')
+
+			downloadLink.setAttribute('href', imgDataUrl);
+			downloadLink.setAttribute('download', 'image.' + imgMode);
+			downloadLink.innerHTML = 'Download Link';
+
+			container.appendChild(downloadLink);
+		}
 
 	}
 }
