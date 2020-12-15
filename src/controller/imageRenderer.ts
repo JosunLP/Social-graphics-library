@@ -22,8 +22,6 @@ export class ImageRenderer {
 			result: XMLDocument = parser.parseFromString(xml, 'text/xml'),
 			inlineSVG = result.getElementsByTagName('svg')[0];
 
-		const sharp = require('sharp');
-
 		inlineSVG.setAttribute('width', width.toString());
 		inlineSVG.setAttribute('height', height.toString());
 
@@ -31,24 +29,37 @@ export class ImageRenderer {
 			img = new Image()
 			;
 
+		const { createCanvas, loadImage } = require('canvas')
+		const canvas = createCanvas(width, height)
+		const ctx = canvas.getContext('2d')
+
+		loadImage(this.renderImgObj(img, data, width, height)).then((image: HTMLImageElement) => {
+			ctx.drawImage(image)
+		})
+
 		switch (imgMode) {
 			case 'svg':
 				return data;
 
 			case 'png':
-				return sharp(this.renderImgObj(img, data, width, height)).png()
+				return canvas.toDataUrl("image/png", 1.0)
 
 			case 'jpeg':
-				return sharp(this.renderImgObj(img, data, width, height)).jpg()
+				return canvas.toDataUrl("image/jpeg", 1.0)
 
 			case 'webp':
-				return sharp(this.renderImgObj(img, data, width, height)).webp()
+				return canvas.toDataUrl("image/webp", 1.0)
 
 			default:
 				data = "data:image/svg+xml;charset=utf-8;base64, " + btoa(False_Template.template());
 				width = False_Template.width;
 				height = False_Template.height;
-				return sharp(this.renderImgObj(img, data, width, height)).png()
+
+				loadImage(this.renderImgObj(img, data, width, height)).then((image: HTMLImageElement) => {
+					ctx.drawImage(image)
+				})
+
+				return canvas.toDataUrl("image/webp", 1.0)
 		}
 	}
 

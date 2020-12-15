@@ -12,5 +12,14 @@ export declare class ImageRenderer {
      * @param [generateLink]
      * @returns image
      */
-    static renderImage(svgString: string, width: number, height: number, containerId: string, imgMode: string, generateLink?: boolean): void;
+    static renderImage(svgString: string, width: number, height: number, imgMode: string): string;
+    /**
+     * Renders img obj
+     * @param img
+     * @param data
+     * @param width
+     * @param height
+     * @returns img obj
+     */
+    private static renderImgObj;
 }

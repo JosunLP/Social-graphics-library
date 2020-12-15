@@ -32,13 +32,7 @@ module.exports = {
         },
     },
     resolve: {
-        extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'],
-        fallback: {
-            "path": require.resolve("path-browserify"),
-            "stream": require.resolve("stream-browserify"),
-            "os": require.resolve("os-browserify/browser"),
-            "util": require.resolve("util/")
-        }
+        extensions: ['.json', '.js', '.jsx', '.ts', '.tsx']
     },
     devtool: 'inline-source-map',
 };
