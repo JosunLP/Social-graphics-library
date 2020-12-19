@@ -7,7 +7,7 @@
         "dev:deploy": "npm install && npm run version:update && npm run dev:build && npm run dev:test",
         "dev:run": "webpack serve",
         "dev:test": "node tests",
-        "version:update": "version.sh",
+        "version:update": "sh ./version.sh",
         "prod:deploy": "npm run dev:deploy && npm publish"
     },
     "main": "./dist/sgl.bundle.js",
