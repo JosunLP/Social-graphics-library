@@ -87,8 +87,14 @@ export class Generator {
 			height = tempTemplate.height
 		}
 
-		let imgDataUrl = ImageRenderer.renderImage(svgString, width, height, imgMode)
+		const imgDataUrl = () => {
+			ImageRenderer.renderImage(svgString, width, height, imgMode)
 
+			while (sessionStorage.getItem(ImageRenderer.tempStorage) === null) {
+				continue;
+			}
+			return sessionStorage.getItem(ImageRenderer.tempStorage)
+		}
 
 		try {
 			container = <HTMLDivElement>document.getElementById(containerId);
