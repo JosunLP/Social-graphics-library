@@ -1,5 +1,5 @@
 import { False_Template } from "../template/false.template";
-import { createCanvas, loadImage } from "canvas"
+import { createCanvas } from "canvas"
 
 /**
  * Image renderer
@@ -11,9 +11,7 @@ export class ImageRenderer {
 	 * @param svgString
 	 * @param width
 	 * @param height
-	 * @param containerId
 	 * @param imgMode
-	 * @param [generateLink]
 	 * @returns image
 	 */
 	public static renderImage(svgString: string, width: number, height: number, imgMode: string): string {
@@ -27,17 +25,57 @@ export class ImageRenderer {
 		inlineSVG.setAttribute('height', height.toString());
 
 		let data = "data:image/svg+xml;charset=utf-8;base64, " + btoa(new XMLSerializer().serializeToString(inlineSVG)),
-			img = new Image()
+			img = new Image(),
+			canvas
 			;
 
-		const canvas = createCanvas(width, height)
-		const ctx = canvas.getContext('2d')
+		if (typeof window === "undefined") {
 
-		img.onload = async () => {
-			loadImage(data).then((image) => {
-				ctx.drawImage(image, 0, 0, width, height)
-			})
+			canvas = createCanvas(width, height)
+
+			const ctx = canvas.getContext('2d')
+
+			img.onload = async () => {
+				ctx.drawImage(img, 0, 0)
+			}
+
+			img.onerror = err => { throw err }
+
+			img.src = data
+			img.width = width
+			img.height = height
+
+		} else {
+			const cElement = document.createElement("canvas"),
+			renderFrame = "renderFrame"
+
+			cElement.id = renderFrame
+			cElement.width = width
+			cElement.height = height
+			cElement.style.display = "hidden"
+
+			document.getElementsByTagName("body")[0].appendChild(cElement)
+
+			canvas = <HTMLCanvasElement>document.getElementById(renderFrame)
+
+			const ctx = <CanvasRenderingContext2D>canvas.getContext('2d')
+
+			img.onload = async () => {
+				ctx.drawImage(img, 0, 0)
+			}
+
+			img.onerror = err => { throw err }
+
+			img.src = data
+			img.width = width
+			img.height = height
+
+			canvas.remove()
 		}
+
+		window.dispatchEvent(new Event('load'))
+
+		console.log(canvas.toDataURL("image/png"))
 
 		switch (imgMode) {
 			case 'svg':
@@ -60,25 +98,8 @@ export class ImageRenderer {
 				inlineSVG.setAttribute('height', height.toString());
 				data = "data:image/svg+xml;charset=utf-8;base64, " + btoa(False_Template.template());
 
-				ctx.drawImage(data)
-
-				return canvas.toDataURL("image/png")
+				return data
 		}
 	}
-
-	// /**
-	//  * Renders img obj
-	//  * @param img
-	//  * @param data
-	//  * @param width
-	//  * @param height
-	//  * @returns img obj
-	//  */
-	// private static renderImgObj(img: HTMLImageElement, data: string, width: number, height: number): HTMLImageElement {
-	// 	img.setAttribute('src', data);
-	// 	img.setAttribute('width', width.toString());
-	// 	img.setAttribute('height', height.toString());
-	// 	return img;
-	// }
 
 }
