@@ -87,14 +87,14 @@ export class Generator {
 			height = tempTemplate.height
 		}
 
-		const imgDataUrl = () => {
-			ImageRenderer.renderImage(svgString, width, height, imgMode)
+		ImageRenderer.renderImage(svgString, width, height, imgMode)
 
-			while (sessionStorage.getItem(ImageRenderer.tempStorage) === null) {
-				continue;
-			}
-			return sessionStorage.getItem(ImageRenderer.tempStorage)
+		while (sessionStorage.getItem(ImageRenderer.tempStorage) === null) {
+			this.sleep(1000)
+			console.log(".");
 		}
+
+		const imgDataUrl = <string>sessionStorage.getItem(ImageRenderer.tempStorage)
 
 		try {
 			container = <HTMLDivElement>document.getElementById(containerId);
@@ -124,5 +124,19 @@ export class Generator {
 			container.appendChild(downloadLink);
 		}
 
+		sessionStorage.clear()
+
+	}
+
+	/**
+	 * Sleeps generator
+	 * @param milliseconds
+	 */
+	private static sleep(milliseconds: number) {
+		const date = Date.now();
+		let currentDate = null;
+		do {
+			currentDate = Date.now();
+		} while (currentDate - date < milliseconds);
 	}
 }
