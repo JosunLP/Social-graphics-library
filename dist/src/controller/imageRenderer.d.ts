@@ -3,17 +3,13 @@
  */
 export declare class ImageRenderer {
     /**
-     * Temp storage of image renderer
-     */
-    static tempStorage: string;
-    /**
      * Renders image
      * @param svgString
      * @param width
      * @param height
      * @param imgMode
      */
-    static renderImage(svgString: string, width: number, height: number, imgMode: string): Promise<void>;
+    static renderImage(svgString: string, width: number, height: number, imgMode: string): string;
     /**
      * Switchs image mode
      * @param canvas

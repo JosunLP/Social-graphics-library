@@ -1,5 +1,7 @@
 import { False_Template } from "../template/false.template";
 import { Canvas, createCanvas } from "canvas"
+import { Const } from "../model/const";
+import { domain } from "process";
 
 /**
  * Image renderer
@@ -7,31 +9,27 @@ import { Canvas, createCanvas } from "canvas"
 export class ImageRenderer {
 
 	/**
-	 * Temp storage of image renderer
-	 */
-	public static tempStorage = "img";
-
-	/**
 	 * Renders image
 	 * @param svgString
 	 * @param width
 	 * @param height
 	 * @param imgMode
+	 * @returns image
 	 */
-	public static async renderImage(svgString: string, width: number, height: number, imgMode: string): Promise<void> {
+	public static renderImage(svgString: string, width: number, height: number, imgMode: string): string {
 
 		let xml = svgString,
 			parser = new DOMParser(),
 			result: XMLDocument = parser.parseFromString(xml, 'text/xml'),
-			inlineSVG = result.getElementsByTagName('svg')[0]
+			inlineSVG = result.getElementsByTagName('svg')[0],
+			returnString: string = Const.empty
 
 		inlineSVG.setAttribute('width', width.toString());
 		inlineSVG.setAttribute('height', height.toString());
 
 		let data = "data:image/svg+xml;charset=utf-8;base64, " + btoa(new XMLSerializer().serializeToString(inlineSVG)),
 			img = new Image(),
-			canvas: Canvas | HTMLCanvasElement
-			;
+			cEntity.canvas: Canvas | HTMLCanvasElement
 
 		if (typeof window === "undefined") {
 
@@ -42,8 +40,8 @@ export class ImageRenderer {
 			img.onload = async () => {
 				ctx.drawImage(img, 0, 0)
 
-				let store = this.switchImageMode(canvas, data, imgMode, width, height, xml, result, parser, inlineSVG)
-				sessionStorage.setItem(this.tempStorage, store)
+				returnString = this.switchImageMode(canvas, data, imgMode, width, height, xml, result, parser, inlineSVG)
+
 			}
 
 			img.onerror = err => { throw err }
@@ -54,18 +52,14 @@ export class ImageRenderer {
 
 			img.dispatchEvent(new Event('load'))
 
+			return returnString
+
 		} else {
-			const cElement = document.createElement("canvas"),
-			renderFrame = "renderFrame"
+			cEntity.canvas = document.createElement("canvas")
 
-			cElement.id = renderFrame
-			cElement.width = width
-			cElement.height = height
-			cElement.style.display = "hidden"
-
-			document.getElementsByTagName("body")[0].appendChild(cElement)
-
-			canvas = <HTMLCanvasElement>document.getElementById(renderFrame)
+			canvas.id = Const.renderFrame
+			canvas.width = width
+			canvas.height = height
 
 			const ctx = <CanvasRenderingContext2D>canvas.getContext('2d')
 
@@ -77,23 +71,16 @@ export class ImageRenderer {
 
 				ctx.drawImage(img, 0, 0)
 
-				let store = this.switchImageMode(canvas, data, imgMode, width, height, xml, result, parser, inlineSVG)
-				sessionStorage.setItem(this.tempStorage, store)
+				returnString = this.switchImageMode(canvas, data, imgMode, width, height, xml, result, parser, inlineSVG)
 
 			}
 
 			img.onerror = err => { throw err }
 
-			if (document.dispatchEvent(new Event('load'))) {
-				console.log("Load event...");
-			} else {
-				throw new Error("Firing load event failed!");
-			}
+			img.dispatchEvent(new Event('load'))
 
-			canvas.remove()
+			return returnString
 		}
-
-		console.log(canvas.toDataURL("image/png"))
 
 	}
 
