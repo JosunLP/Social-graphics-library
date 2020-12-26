@@ -10,4 +10,13 @@ export declare class Const {
      * Render frame of const
      */
     static readonly renderFrame = "renderFrame";
+    /**
+     * Sleep time of const
+     */
+    static readonly sleepTime = 1000;
+    /**
+     * Sleeps const
+     * @param milliseconds
+     */
+    static sleep(milliseconds: number): void;
 }

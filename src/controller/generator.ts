@@ -8,7 +8,6 @@ import { ImageRenderer } from "./imageRenderer";
 import { Template } from "../model/templateBase";
 import { TemplateInjector } from "./templateInjector";
 import { StringCleaner } from "./stringCleaner";
-import { Const } from "../model/const";
 
 /**
  * Generator
@@ -24,7 +23,7 @@ export class Generator {
 	 * @param imgMode
 	 * @param [generateLink]
 	 */
-	public static run(teamName: string, playerName: string, mode: string, containerId: string, imgMode: string, templateInjector: TemplateInjector, generateLink?: boolean): void {
+	public static async run(teamName: string, playerName: string, mode: string, containerId: string, imgMode: string, templateInjector: TemplateInjector, generateLink?: boolean): Promise<void> {
 
 		let svgString: string,
 			width: number,
@@ -88,11 +87,7 @@ export class Generator {
 			height = tempTemplate.height
 		}
 
-		const imgDataUrl = ImageRenderer.renderImage(svgString, width, height, imgMode)
-
-		if (imgDataUrl === Const.empty) {
-			throw new Error("The rendering process has failed!");
-		}
+		const imgDataUrl = await ImageRenderer.renderImage(svgString, width, height, imgMode)
 
 		try {
 			container = <HTMLDivElement>document.getElementById(containerId);
@@ -100,16 +95,16 @@ export class Generator {
 			throw new Error("The container "+ containerId +" is not defined!");
 		}
 
-		let img2 = new Image();
+		let img = new Image();
 		width = width / 4;
 		height = height / 4;
-		img2.setAttribute('src', imgDataUrl);
-		img2.setAttribute('width', width.toString());
-		img2.setAttribute('height', height.toString());
+		img.setAttribute('src', imgDataUrl);
+		img.setAttribute('width', width.toString());
+		img.setAttribute('height', height.toString());
 
 		container.innerHTML = "";
 
-		container.appendChild(img2);
+		container.appendChild(img);
 
 		if (generateLink) {
 

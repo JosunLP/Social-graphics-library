@@ -8,20 +8,23 @@ export declare class ImageRenderer {
      * @param width
      * @param height
      * @param imgMode
+     * @returns image
      */
-    static renderImage(svgString: string, width: number, height: number, imgMode: string): string;
+    static renderImage(svgString: string, width: number, height: number, imgMode: string): Promise<string>;
     /**
-     * Switchs image mode
-     * @param canvas
-     * @param data
+     * Renders image url
      * @param imgMode
-     * @param width
-     * @param height
+     * @param data
+     * @param canvas
      * @param xml
      * @param result
      * @param parser
      * @param inlineSVG
-     * @returns image mode
+     * @param width
+     * @param height
+     * @param img
+     * @returns image url
      */
-    private static switchImageMode;
+    private static renderImageUrl;
+    private static createObjectURL;
 }

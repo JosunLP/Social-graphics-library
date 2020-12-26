@@ -1,7 +1,4 @@
 import { False_Template } from "../template/false.template";
-import { Canvas, createCanvas } from "canvas"
-import { Const } from "../model/const";
-import { domain } from "process";
 
 /**
  * Image renderer
@@ -16,102 +13,112 @@ export class ImageRenderer {
 	 * @param imgMode
 	 * @returns image
 	 */
-	public static renderImage(svgString: string, width: number, height: number, imgMode: string): string {
+	public static async renderImage(svgString: string, width: number, height: number, imgMode: string): Promise<string> {
 
 		let xml = svgString,
 			parser = new DOMParser(),
 			result: XMLDocument = parser.parseFromString(xml, 'text/xml'),
-			inlineSVG = result.getElementsByTagName('svg')[0],
-			returnString: string = Const.empty
+			inlineSVG = result.getElementsByTagName('svg')[0]
 
 		inlineSVG.setAttribute('width', width.toString());
 		inlineSVG.setAttribute('height', height.toString());
 
 		let data = "data:image/svg+xml;charset=utf-8;base64, " + btoa(new XMLSerializer().serializeToString(inlineSVG)),
 			img = new Image(),
-			cEntity.canvas: Canvas | HTMLCanvasElement
+			canvas: OffscreenCanvas
 
 		if (typeof window === "undefined") {
 
-			canvas = createCanvas(width, height)
-
-			const ctx = canvas.getContext('2d')
-
-			img.onload = async () => {
-				ctx.drawImage(img, 0, 0)
-
-				returnString = this.switchImageMode(canvas, data, imgMode, width, height, xml, result, parser, inlineSVG)
-
-			}
-
-			img.onerror = err => { throw err }
+			canvas = new OffscreenCanvas(width, height)
 
 			img.src = data
 			img.width = width
 			img.height = height
 
+			img.onerror = err => { throw err }
+
 			img.dispatchEvent(new Event('load'))
 
-			return returnString
+			return this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
 
 		} else {
-			cEntity.canvas = document.createElement("canvas")
 
-			canvas.id = Const.renderFrame
-			canvas.width = width
-			canvas.height = height
-
-			const ctx = <CanvasRenderingContext2D>canvas.getContext('2d')
+			canvas = new OffscreenCanvas(width, height)
 
 			img.src = data
 			img.width = width
 			img.height = height
 
-			img.onload = async () => {
-
-				ctx.drawImage(img, 0, 0)
-
-				returnString = this.switchImageMode(canvas, data, imgMode, width, height, xml, result, parser, inlineSVG)
-
-			}
-
 			img.onerror = err => { throw err }
 
-			img.dispatchEvent(new Event('load'))
+			return this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
 
-			return returnString
 		}
-
 	}
 
 	/**
-	 * Switchs image mode
-	 * @param canvas
-	 * @param data
+	 * Renders image url
 	 * @param imgMode
-	 * @param width
-	 * @param height
+	 * @param data
+	 * @param canvas
 	 * @param xml
 	 * @param result
 	 * @param parser
 	 * @param inlineSVG
-	 * @returns image mode
+	 * @param width
+	 * @param height
+	 * @param img
+	 * @returns image url
 	 */
-	private static switchImageMode(canvas: Canvas | HTMLCanvasElement, data: string, imgMode: string, width: number, height: number, xml: string, result: XMLDocument, parser: DOMParser, inlineSVG: SVGSVGElement): string {
+	private static async renderImageUrl(imgMode: string, data: string, canvas: OffscreenCanvas, xml: string, result: XMLDocument, parser: DOMParser, inlineSVG: SVGSVGElement, width: number, height: number, img: HTMLImageElement): string {
+
+		const ctx = <OffscreenCanvasRenderingContext2D>canvas.getContext('2d')
+		let blob: Blob,
+			url
+
+		ctx.drawImage(img, 0, 0, width, height)
+
 		switch (imgMode) {
 			case 'svg':
 				return data
 
 			case 'png':
-				return canvas.toDataURL("image/png")
+
+				blob = await canvas.convertToBlob({
+					type: "image/png",
+					quality: 1
+				})
+
+				url = this.blobToDataURL(blob, (e:string): string => {
+					return e
+				})
+
+				return url;
 
 			case 'jpeg':
-				return canvas.toDataURL("image/jpeg", 1.0)
+
+				blob = canvas.convertToBlob({
+					type: "image/jpeg",
+					quality: 1
+				})
+
+				url = <string>this.createObjectURL(blob)
+
+				return url
 
 			case 'webp':
-				return canvas.toDataURL("image/webp")
+
+				blob = canvas.convertToBlob({
+					type: "image/webp",
+					quality: 1
+				})
+
+				url = <string>this.createObjectURL(blob)
+
+				return url
 
 			default:
+
 				xml = False_Template.template();
 				result = parser.parseFromString(xml, 'text/xml');
 				inlineSVG = result.getElementsByTagName('svg')[0];
@@ -123,4 +130,9 @@ export class ImageRenderer {
 		}
 	}
 
+	private static blobToDataURL(blob: Blob, callback: Function): string | void {
+		let a = new FileReader();
+		a.onload = function (e) { callback(e.target!.result); }
+		a.readAsDataURL(blob);
+	}
 }
