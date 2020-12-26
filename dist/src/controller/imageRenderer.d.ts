@@ -26,5 +26,11 @@ export declare class ImageRenderer {
      * @returns image url
      */
     private static renderImageUrl;
-    private static createObjectURL;
+    /**
+     * Blobs to data url
+     * @param blob
+     * @param callback
+     * @returns to data url
+     */
+    private static blobToDataURL;
 }

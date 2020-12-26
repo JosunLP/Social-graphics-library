@@ -1,3 +1,5 @@
+import { Const } from "../model/const";
+import { ErrorRespose } from "../model/error";
 import { False_Template } from "../template/false.template";
 
 /**
@@ -39,7 +41,7 @@ export class ImageRenderer {
 
 			img.dispatchEvent(new Event('load'))
 
-			return this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
+			return await this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
 
 		} else {
 
@@ -51,7 +53,7 @@ export class ImageRenderer {
 
 			img.onerror = err => { throw err }
 
-			return this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
+			return await this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
 
 		}
 	}
@@ -70,13 +72,15 @@ export class ImageRenderer {
 	 * @param img
 	 * @returns image url
 	 */
-	private static async renderImageUrl(imgMode: string, data: string, canvas: OffscreenCanvas, xml: string, result: XMLDocument, parser: DOMParser, inlineSVG: SVGSVGElement, width: number, height: number, img: HTMLImageElement): string {
+	private static async renderImageUrl(imgMode: string, data: string, canvas: OffscreenCanvas, xml: string, result: XMLDocument, parser: DOMParser, inlineSVG: SVGSVGElement, width: number, height: number, img: HTMLImageElement): Promise<string> {
 
 		const ctx = <OffscreenCanvasRenderingContext2D>canvas.getContext('2d')
-		let blob: Blob,
+		let blob,
 			url
 
-		ctx.drawImage(img, 0, 0, width, height)
+		img.onload = () => {
+			ctx.drawImage(img, 0, 0, width, height)
+		}
 
 		switch (imgMode) {
 			case 'svg':
@@ -89,7 +93,11 @@ export class ImageRenderer {
 					quality: 1
 				})
 
-				url = this.blobToDataURL(blob, (e:string): string => {
+				if (!Const.checkBlobState(blob)) {
+					throw new Error(ErrorRespose.blobState);
+				}
+
+				url = <string>this.blobToDataURL(blob, (e: string): string => {
 					return e
 				})
 
@@ -97,25 +105,37 @@ export class ImageRenderer {
 
 			case 'jpeg':
 
-				blob = canvas.convertToBlob({
+				blob = await canvas.convertToBlob({
 					type: "image/jpeg",
 					quality: 1
 				})
 
-				url = <string>this.createObjectURL(blob)
+				if (!Const.checkBlobState(blob)) {
+					throw new Error(ErrorRespose.blobState);
+				}
 
-				return url
+				url = <string>this.blobToDataURL(blob, (e: string): string => {
+					return e
+				})
+
+				return url;
 
 			case 'webp':
 
-				blob = canvas.convertToBlob({
+				blob = await canvas.convertToBlob({
 					type: "image/webp",
 					quality: 1
 				})
 
-				url = <string>this.createObjectURL(blob)
+				if (!Const.checkBlobState(blob)) {
+					throw new Error(ErrorRespose.blobState);
+				}
 
-				return url
+				url = <string>this.blobToDataURL(blob, (e: string): string => {
+					return e
+				})
+
+				return url;
 
 			default:
 
@@ -130,6 +150,12 @@ export class ImageRenderer {
 		}
 	}
 
+	/**
+	 * Blobs to data url
+	 * @param blob
+	 * @param callback
+	 * @returns to data url
+	 */
 	private static blobToDataURL(blob: Blob, callback: Function): string | void {
 		let a = new FileReader();
 		a.onload = function (e) { callback(e.target!.result); }
