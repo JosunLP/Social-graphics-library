@@ -29,33 +29,16 @@ export class ImageRenderer {
 			img = new Image(),
 			canvas: OffscreenCanvas
 
-		if (typeof window === "undefined") {
 
-			canvas = new OffscreenCanvas(width, height)
+		canvas = new OffscreenCanvas(width, height)
 
-			img.src = data
-			img.width = width
-			img.height = height
+		img.width = width
+		img.height = height
 
-			img.onerror = err => { throw err }
+		img.onerror = err => { throw err }
 
-			img.dispatchEvent(new Event('load'))
+		return await this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
 
-			return await this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
-
-		} else {
-
-			canvas = new OffscreenCanvas(width, height)
-
-			img.src = data
-			img.width = width
-			img.height = height
-
-			img.onerror = err => { throw err }
-
-			return await this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
-
-		}
 	}
 
 	/**
@@ -75,12 +58,12 @@ export class ImageRenderer {
 	private static async renderImageUrl(imgMode: string, data: string, canvas: OffscreenCanvas, xml: string, result: XMLDocument, parser: DOMParser, inlineSVG: SVGSVGElement, width: number, height: number, img: HTMLImageElement): Promise<string> {
 
 		const ctx = <OffscreenCanvasRenderingContext2D>canvas.getContext('2d')
-		let blob,
-			url
 
 		img.onload = () => {
 			ctx.drawImage(img, 0, 0, width, height)
 		}
+
+		img.src = data
 
 		switch (imgMode) {
 			case 'svg':
@@ -88,54 +71,15 @@ export class ImageRenderer {
 
 			case 'png':
 
-				blob = await canvas.convertToBlob({
-					type: "image/png",
-					quality: 1
-				})
-
-				if (!Const.checkBlobState(blob)) {
-					throw new Error(ErrorRespose.blobState);
-				}
-
-				url = <string>this.blobToDataURL(blob, (e: string): string => {
-					return e
-				})
-
-				return url;
+				return await this.handleBlob(imgMode, canvas);
 
 			case 'jpeg':
 
-				blob = await canvas.convertToBlob({
-					type: "image/jpeg",
-					quality: 1
-				})
-
-				if (!Const.checkBlobState(blob)) {
-					throw new Error(ErrorRespose.blobState);
-				}
-
-				url = <string>this.blobToDataURL(blob, (e: string): string => {
-					return e
-				})
-
-				return url;
+				return await this.handleBlob(imgMode, canvas);
 
 			case 'webp':
 
-				blob = await canvas.convertToBlob({
-					type: "image/webp",
-					quality: 1
-				})
-
-				if (!Const.checkBlobState(blob)) {
-					throw new Error(ErrorRespose.blobState);
-				}
-
-				url = <string>this.blobToDataURL(blob, (e: string): string => {
-					return e
-				})
-
-				return url;
+				throw new Error(ErrorRespose.deprecation);
 
 			default:
 
@@ -151,14 +95,58 @@ export class ImageRenderer {
 	}
 
 	/**
+	 * Handles blob
+	 * @param dataType
+	 * @param canvas
+	 * @returns fileUrl
+	 */
+	private static async handleBlob(dataType: string, canvas: OffscreenCanvas): Promise<string> {
+
+		let blob
+
+		if (dataType == "jpeg") {
+			blob = await canvas.convertToBlob({
+				type: "image/" + dataType,
+				quality: 1
+			})
+		} else {
+			blob = await canvas.convertToBlob({
+				type: "image/" + dataType
+			})
+		}
+
+		if (!Const.checkBlobState(blob)) {
+			throw new Error(ErrorRespose.blobState);
+		}
+
+		const fileUrl = await this.blobToDataURL(blob)
+
+		return fileUrl
+	}
+
+	/**
 	 * Blobs to data url
 	 * @param blob
-	 * @param callback
 	 * @returns to data url
 	 */
-	private static blobToDataURL(blob: Blob, callback: Function): string | void {
-		let a = new FileReader();
-		a.onload = function (e) { callback(e.target!.result); }
-		a.readAsDataURL(blob);
+	private static async blobToDataURL(blob: Blob): Promise<string> {
+
+		const a = new FileReader()
+		let result: string
+
+		a.onload = (e) => {
+			sessionStorage.setItem(Const.urlStorageKey, <string>e.target?.result);
+		}
+
+		a.readAsDataURL(blob)
+
+		while (!a.DONE) {
+			continue
+		}
+
+		result =  <string>sessionStorage.getItem(Const.urlStorageKey)
+
+		return result;
+
 	}
 }

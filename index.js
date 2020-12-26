@@ -16,7 +16,7 @@ document
                     .getElementById('uName').value, [{
                         mode: 'twitch-title',
                         containerId: 'img-container-1',
-                        imgMode: 'webp'
+                        imgMode: 'jpeg'
                     }, {
                         mode: 'elavate-title',
                         containerId: 'img-container-2',
@@ -24,7 +24,7 @@ document
                     }, {
                         mode: 'twitter-title',
                         containerId: 'img-container-3',
-                        imgMode: 'webp'
+                        imgMode: 'jpeg'
                     }, {
                         mode: 'youtube-title',
                         containerId: 'img-container-4',

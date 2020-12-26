@@ -18,6 +18,8 @@ export class Const {
 	 */
 	public static readonly sleepTime = 1000
 
+	public static readonly urlStorageKey = "sglImageUrl"
+
 	/**
 	 * Sleeps const
 	 * @param milliseconds

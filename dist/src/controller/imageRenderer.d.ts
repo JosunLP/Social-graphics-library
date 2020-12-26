@@ -27,9 +27,15 @@ export declare class ImageRenderer {
      */
     private static renderImageUrl;
     /**
+     * Handles blob
+     * @param dataType
+     * @param canvas
+     * @returns fileUrl
+     */
+    private static handleBlob;
+    /**
      * Blobs to data url
      * @param blob
-     * @param callback
      * @returns to data url
      */
     private static blobToDataURL;
