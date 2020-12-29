@@ -34,5 +34,4 @@ export declare class ImageRenderer {
      */
     private static handleBlob;
     private static getWorkerURL;
-    private static workerScript;
 }

@@ -1,4 +1,3 @@
-import { Const } from "../model/const";
 import { ErrorRespose } from "../model/error";
 import { False_Template } from "../template/false.template";
 
@@ -101,7 +100,7 @@ export class ImageRenderer {
 	private static async handleBlob(dataType: string, canvas: OffscreenCanvas): Promise<string> {
 
 		let blob: Blob,
-			blobURL: string,
+			workerURL: string,
 			dataURL: string = "",
 			done: boolean = false
 
@@ -117,38 +116,31 @@ export class ImageRenderer {
 			})
 		}
 
-		blobURL = URL.createObjectURL(this.getWorkerURL);
+		workerURL = this.getWorkerURL();
 
-		const worker = new Worker(blobURL)
+		const worker = new Worker(workerURL)
 
-		worker.addEventListener("message", (e) => {
+		worker.onerror = err => { throw new Error(err.message) }
+
+		worker.onmessage = msg => {
+			dataURL = msg.data
 			done = true
-			dataURL = e.data
-		})
+		}
 
 		worker.postMessage(blob)
 
-		while (done) {
-			Const.sleep(100)
-		}
+		worker.terminate()
 
 		return dataURL
 	}
 
 	private static getWorkerURL() {
-		let entire = this.workerScript.toString(),
-			body = entire.slice(entire.indexOf("{") + 1, entire.lastIndexOf("}"))
+
+		let body = "this.addEventListener('message', (ev) => {const dataURL = new FileReaderSync().readAsDataURL(ev.data);postMessage(dataURL);})"
 
 		return URL.createObjectURL(
 			new Blob([body])
 		)
-	}
-
-	private static workerScript() {
-		onmessage = (ev) => {
-			const dataURL = new FileReaderSync().readAsDataURL(ev.data);
-			postMessage(dataURL);
-		}
 	}
 
 }
