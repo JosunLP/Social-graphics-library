@@ -123,7 +123,6 @@ export class ImageRenderer {
 
 		worker.onmessage = msg => {
 			dataURL = msg.data
-			done = true
 		}
 
 		worker.postMessage(blob)
