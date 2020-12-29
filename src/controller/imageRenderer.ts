@@ -35,8 +35,6 @@ export class ImageRenderer {
 		img.width = width
 		img.height = height
 
-		img.onerror = err => { throw err }
-
 		return await this.renderImageUrl(imgMode, data, canvas, xml, result, parser, inlineSVG, width, height, img)
 
 	}
@@ -102,7 +100,11 @@ export class ImageRenderer {
 	 */
 	private static async handleBlob(dataType: string, canvas: OffscreenCanvas): Promise<string> {
 
-		let blob: Blob
+		let blob: Blob,
+			blobURL: string,
+			dataURL: string = "",
+			done: boolean = false
+
 
 		if (dataType == "jpeg") {
 			blob = await canvas.convertToBlob({
@@ -115,38 +117,38 @@ export class ImageRenderer {
 			})
 		}
 
-		if (!Const.checkBlobState(blob)) {
-			throw new Error(ErrorRespose.blobState);
+		blobURL = URL.createObjectURL(this.getWorkerURL);
+
+		const worker = new Worker(blobURL)
+
+		worker.addEventListener("message", (e) => {
+			done = true
+			dataURL = e.data
+		})
+
+		worker.postMessage(blob)
+
+		while (done) {
+			Const.sleep(100)
 		}
 
-		const fileUrl = await this.blobToDataURL(blob)
-
-		return fileUrl
+		return dataURL
 	}
 
-	/**
-	 * Blobs to data url
-	 * @param blob
-	 * @returns to data url
-	 */
-	private static async blobToDataURL(blob: Blob): Promise<string> {
+	private static getWorkerURL() {
+		let entire = this.workerScript.toString(),
+			body = entire.slice(entire.indexOf("{") + 1, entire.lastIndexOf("}"))
 
-		const a = new FileReader()
-		let result: string
-
-		a.onload = (e) => {
-			sessionStorage.setItem(Const.urlStorageKey, <string>e.target?.result);
-		}
-
-		a.readAsDataURL(blob)
-
-		while (!a.DONE) {
-			Const.sleep(10)
-		}
-
-		result =  <string>sessionStorage.getItem(Const.urlStorageKey)
-
-		return result;
-
+		return URL.createObjectURL(
+			new Blob([body])
+		)
 	}
+
+	private static workerScript() {
+		onmessage = (ev) => {
+			const dataURL = new FileReaderSync().readAsDataURL(ev.data);
+			postMessage(dataURL);
+		}
+	}
+
 }

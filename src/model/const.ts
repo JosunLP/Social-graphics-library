@@ -33,17 +33,4 @@ export class Const {
 		}
 	}
 
-	/**
-	 * Checks blob state
-	 * @param blob
-	 * @returns true if blob state
-	 */
-	public static checkBlobState(blob: Blob): boolean {
-		if (blob.type == "" || blob.size == 0) {
-			return false;
-		}
-
-		return true
-	}
-
 }

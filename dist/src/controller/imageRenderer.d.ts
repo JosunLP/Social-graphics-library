@@ -33,10 +33,6 @@ export declare class ImageRenderer {
      * @returns fileUrl
      */
     private static handleBlob;
-    /**
-     * Blobs to data url
-     * @param blob
-     * @returns to data url
-     */
-    private static blobToDataURL;
+    private static getWorkerURL;
+    private static workerScript;
 }

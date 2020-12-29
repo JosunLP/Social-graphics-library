@@ -18,10 +18,16 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.tsx?$/,
-            use: 'ts-loader',
-            exclude: /node_modules/,
-        }],
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.worker\.js$/,
+                use: { loader: "worker-loader" },
+                exclude: /node_modules/,
+            },
+        ],
     },
     devServer: {
         contentBase: path.join(__dirname, './'),

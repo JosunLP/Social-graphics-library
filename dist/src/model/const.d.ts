@@ -20,10 +20,4 @@ export declare class Const {
      * @param milliseconds
      */
     static sleep(milliseconds: number): void;
-    /**
-     * Checks blob state
-     * @param blob
-     * @returns true if blob state
-     */
-    static checkBlobState(blob: Blob): boolean;
 }
