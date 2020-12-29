@@ -101,8 +101,7 @@ export class ImageRenderer {
 
 		let blob: Blob,
 			workerURL: string,
-			dataURL: string = "",
-			done: boolean = false
+			dataURL: string = ""
 
 
 		if (dataType == "jpeg") {
