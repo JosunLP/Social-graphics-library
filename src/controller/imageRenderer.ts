@@ -102,7 +102,7 @@ export class ImageRenderer {
 	 */
 	private static async handleBlob(dataType: string, canvas: OffscreenCanvas): Promise<string> {
 
-		let blob
+		let blob: Blob
 
 		if (dataType == "jpeg") {
 			blob = await canvas.convertToBlob({
@@ -141,7 +141,7 @@ export class ImageRenderer {
 		a.readAsDataURL(blob)
 
 		while (!a.DONE) {
-			continue
+			Const.sleep(10)
 		}
 
 		result =  <string>sessionStorage.getItem(Const.urlStorageKey)

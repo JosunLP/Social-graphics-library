@@ -45,6 +45,7 @@
         "@babel/core": "^7.12.10",
         "@babel/preset-env": "^7.12.10",
         "@types/node": "^14.14.16",
+        "@types/offscreencanvas": "^2019.6.2",
         "babel-loader": "^8.2.2",
         "buffer": "^6.0.3",
         "jsdom": "^16.4.0",
