@@ -29,7 +29,6 @@ export class ImageRenderer {
 			img = new Image(),
 			canvas: OffscreenCanvas
 
-
 		canvas = new OffscreenCanvas(width, height)
 
 		img.width = width
@@ -117,21 +116,29 @@ export class ImageRenderer {
 			})
 		}
 
-		fr.readAsDataURL(blob)
+		dataURL = await new Promise(() => {
 
-		fr.onload = () => {
+			console.log("Pomise");
 
-			dataURL = <string>fr.result
+			let result
 
-		}
+			fr.addEventListener("load", () => {
+				result = fr.result
+			})
 
-		if (typeof(dataURL) !== typeof(Const._defaultString)) {
-			throw new Error(ErrorRespose.wrongType);
-		}
+			fr.readAsDataURL(blob)
+
+			if (typeof (result) !== typeof (Const._defaultString)) {
+				throw new Error(ErrorRespose.wrongType);
+			}
+
+			return result
+
+		})
 
 		// workerURL = this.getWorkerURL();
 
-		// const worker = new Worker(workerURL)
+		// const worker = nJoew Worker(workerURL)
 
 		// worker.onerror = err => { throw new Error(err.message) }
 
