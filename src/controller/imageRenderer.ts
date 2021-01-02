@@ -1,4 +1,5 @@
-import { ErrorRespose } from "../model/error";
+import { Const } from "../class/const";
+import { ErrorRespose } from "../class/error";
 import { False_Template } from "../template/false.template";
 
 /**
@@ -100,8 +101,9 @@ export class ImageRenderer {
 	private static async handleBlob(dataType: string, canvas: OffscreenCanvas): Promise<string> {
 
 		let blob: Blob,
-			workerURL: string,
-			dataURL: string = ""
+			// workerURL: string,
+			dataURL: string = "",
+			fr = new FileReader()
 
 
 		if (dataType == "jpeg") {
@@ -115,30 +117,42 @@ export class ImageRenderer {
 			})
 		}
 
-		workerURL = this.getWorkerURL();
+		fr.readAsDataURL(blob)
 
-		const worker = new Worker(workerURL)
+		fr.onload = () => {
 
-		worker.onerror = err => { throw new Error(err.message) }
+			dataURL = <string>fr.result
 
-		worker.onmessage = msg => {
-			dataURL = msg.data
 		}
 
-		worker.postMessage(blob)
+		if (typeof(dataURL) !== typeof(Const._defaultString)) {
+			throw new Error(ErrorRespose.wrongType);
+		}
 
-		worker.terminate()
+		// workerURL = this.getWorkerURL();
+
+		// const worker = new Worker(workerURL)
+
+		// worker.onerror = err => { throw new Error(err.message) }
+
+		// worker.onmessage = msg => {
+		// 	dataURL = msg.data
+		// }
+
+		// worker.postMessage(blob)
+
+		// worker.terminate()
 
 		return dataURL
 	}
 
-	private static getWorkerURL() {
+	// private static getWorkerURL() {
 
-		let body = "this.addEventListener('message', (ev) => {const dataURL = new FileReaderSync().readAsDataURL(ev.data);postMessage(dataURL);})"
+	// 	let body = "this.addEventListener('message', (ev) => {const dataURL = new FileReaderSync().readAsDataURL(ev.data);postMessage(dataURL);})"
 
-		return URL.createObjectURL(
-			new Blob([body])
-		)
-	}
+	// 	return URL.createObjectURL(
+	// 		new Blob([body])
+	// 	)
+	// }
 
 }

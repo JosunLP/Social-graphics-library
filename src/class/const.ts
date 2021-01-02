@@ -18,7 +18,20 @@ export class Const {
 	 */
 	public static readonly sleepTime = 1000
 
-	public static readonly urlStorageKey = "sglImageUrl"
+	/**
+	 * Default string of const
+	 */
+	public static readonly _defaultString = "DEFAULT"
+
+	/**
+	 * Default int of const
+	 */
+	public static readonly _defaultInt = 42
+
+	/**
+	 * Default bool of const
+	 */
+	public static readonly _defaultBool = false
 
 	/**
 	 * Sleeps const
