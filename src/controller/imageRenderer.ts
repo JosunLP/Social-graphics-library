@@ -76,7 +76,9 @@ export class ImageRenderer {
 
 			case 'webp':
 
-				throw new Error(ErrorRespose.deprecation);
+				console.warn(ErrorRespose.deprecation);
+				return await this.handleBlob(imgMode, canvas);
+
 
 			default:
 
