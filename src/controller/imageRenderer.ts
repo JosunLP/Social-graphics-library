@@ -100,10 +100,11 @@ export class ImageRenderer {
 	private static async handleBlob(dataType: string, canvas: OffscreenCanvas): Promise<string> {
 
 		let blob: Blob,
-			// workerURL: string,
-			dataURL: string = "",
-			fileReader = new FileReader()
+			workerURL: string = this.getWorkerURL(),
+			dataURL: string = ""
+			// fileReader = new FileReader()
 
+		const worker = new Worker(workerURL)
 
 		if (dataType == "jpeg") {
 			blob = await canvas.convertToBlob({
@@ -116,52 +117,66 @@ export class ImageRenderer {
 			})
 		}
 
+		// dataURL = await new Promise(() => {
+
+		// 	console.log("Pomise");
+
+		// 	let result
+
+		// 	fileReader.onloadend = () => {
+		// 		result = <>fileReader.result
+		// 		const temp = document.createElement("div")
+		// 		temp.innerHTML = result;
+		// 	}
+
+		// 	fileReader.readAsDataURL(blob)
+
+		// 	if (typeof (result) !== typeof (Const._defaultString)) {
+		// 		throw new Error(ErrorRespose.wrongType);
+		// 	}
+
+		// 	return result
+
+		// })
+
 		dataURL = await new Promise(() => {
 
-			console.log("Pomise");
+			let result: string = Const._defaultString
 
-			let result
+			worker.onerror = err => { throw new Error(err.message) }
 
-			fileReader.onloadend = () => {
-				result = <>fileReader.result
-				const temp = document.createElement("div")
-				temp.innerHTML = result;
+			worker.onmessage = msg => {
+				result = msg.data
 			}
 
-			fileReader.readAsDataURL(blob)
+			worker.postMessage(blob)
 
-			if (typeof (result) !== typeof (Const._defaultString)) {
-				throw new Error(ErrorRespose.wrongType);
+			while (true) {
+
+				if (result !== Const._defaultString) {
+
+					break;
+
+				}
+
 			}
 
 			return result
 
 		})
 
-		// workerURL = this.getWorkerURL();
-
-		// const worker = nJoew Worker(workerURL)
-
-		// worker.onerror = err => { throw new Error(err.message) }
-
-		// worker.onmessage = msg => {
-		// 	dataURL = msg.data
-		// }
-
-		// worker.postMessage(blob)
-
-		// worker.terminate()
+		worker.terminate()
 
 		return dataURL
 	}
 
-	// private static getWorkerURL() {
+	private static getWorkerURL() {
 
-	// 	let body = "this.addEventListener('message', (ev) => {const dataURL = new FileReaderSync().readAsDataURL(ev.data);postMessage(dataURL);})"
+		let body = "this.addEventListener('message', (ev) => {const dataURL = new FileReaderSync().readAsDataURL(ev.data);postMessage(dataURL);})"
 
-	// 	return URL.createObjectURL(
-	// 		new Blob([body])
-	// 	)
-	// }
+		return URL.createObjectURL(
+			new Blob([body])
+		)
+	}
 
 }
