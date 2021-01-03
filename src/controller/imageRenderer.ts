@@ -102,7 +102,7 @@ export class ImageRenderer {
 		let blob: Blob,
 			// workerURL: string,
 			dataURL: string = "",
-			fr = new FileReader()
+			fileReader = new FileReader()
 
 
 		if (dataType == "jpeg") {
@@ -122,11 +122,13 @@ export class ImageRenderer {
 
 			let result
 
-			fr.addEventListener("load", () => {
-				result = fr.result
-			})
+			fileReader.onloadend = () => {
+				result = <>fileReader.result
+				const temp = document.createElement("div")
+				temp.innerHTML = result;
+			}
 
-			fr.readAsDataURL(blob)
+			fileReader.readAsDataURL(blob)
 
 			if (typeof (result) !== typeof (Const._defaultString)) {
 				throw new Error(ErrorRespose.wrongType);
