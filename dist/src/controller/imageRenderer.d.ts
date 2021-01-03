@@ -33,5 +33,9 @@ export declare class ImageRenderer {
      * @returns fileUrl
      */
     private static handleBlob;
+    /**
+     * Gets worker url
+     * @returns worker url
+     */
     private static getWorkerURL;
 }

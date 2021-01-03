@@ -170,7 +170,11 @@ export class ImageRenderer {
 		return dataURL
 	}
 
-	private static getWorkerURL() {
+	/**
+	 * Gets worker url
+	 * @returns worker url
+	 */
+	private static getWorkerURL(): string {
 
 		let body = "this.addEventListener('message', (ev) => {const dataURL = new FileReaderSync().readAsDataURL(ev.data);postMessage(dataURL);})"
 
