@@ -1,4 +1,17 @@
+/**
+ * Info
+ */
 export declare class Info {
+    version: string;
+    author: string;
+    license: string;
+    repository: string;
+    homepage: string;
+    install: string;
+    /**
+     * Creates an instance of info.
+     */
+    constructor();
     /**
      * Version  of info
      */
@@ -23,13 +36,4 @@ export declare class Info {
      * Install  of info
      */
     private readonly _install;
-    /**
-     * Creates an instance of info.
-     */
-    constructor();
-    /**
-     * Gets version
-     * @returns version
-     */
-    getVersion(): string;
 }

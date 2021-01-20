@@ -1,10 +1,39 @@
+/**
+ * Info
+ */
 export class Info {
 
 	//#region vars
+	public version: string
+
+	public author: string
+
+	public license: string
+
+	public repository: string
+
+	public homepage: string
+
+	public install: string
+	//#endregion
+
+	/**
+	 * Creates an instance of info.
+	 */
+	constructor() {
+		this.version = this._version
+		this.author = this._author
+		this.license = this._license
+		this.repository = this._repository
+		this.homepage = this._homepage
+		this.install = this._install
+	}
+
+	//#region const
 	/**
 	 * Version  of info
 	 */
-	private readonly _version: string = "1.5.11"
+	private readonly _version: string = "1.5.12"
 
 	/**
 	 * Author  of info
@@ -30,30 +59,6 @@ export class Info {
 	 * Install  of info
 	 */
 	private readonly _install: string = "npm i social-graphics-library"
-	//#endregion
-
-	//#region constructor
-	/**
-	 * Creates an instance of info.
-	 */
-	public constructor() {
-		this._version;
-		this._author;
-		this._license;
-		this._repository;
-		this._install;
-		this._homepage;
-	}
-	//#endregion
-
-	//#region get
-	/**
-	 * Gets version
-	 * @returns version
-	 */
-	public getVersion(): string {
-		return this._version;
-	}
 	//#endregion
 
 }

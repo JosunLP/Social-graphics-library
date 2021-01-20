@@ -1,17 +1,20 @@
 {
     "name": "social-graphics-library",
-    "version": "1.5.11",
+    "version": "1.5.12",
     "description": "A script for generating social media logos and banners",
     "scripts": {
         "dev:build": "webpack",
-        "dev:deploy": "npm install && npm run version:update && npm run dev:build && npm run dev:test",
+        "dev:deploy:win": "npm install && npm run version:update:windows && npm run dev:build && npm run dev:test",
+        "dev:deploy:linux": "npm install && npm run version:update:linux && npm run dev:build && npm run dev:test",
         "dev:run": "webpack serve",
         "dev:test": "node tests",
-        "version:update": "sh ./version.sh",
-        "prod:deploy": "npm run dev:deploy && npm publish"
+        "version:update:windows": "version.sh",
+        "version:update:linux": "sh ./version.sh",
+        "prod:deploy:win": "npm run dev:deploy:win && npm publish",
+        "prod:deploy:linux": "npm run dev:deploy:linux && npm publish"
     },
     "main": "./dist/sgl.bundle.js",
-    "module": "src/glc.ts",
+    "module": "./dist/sgl.bundle.js",
     "private": false,
     "repository": {
         "type": "git",
