@@ -38,7 +38,7 @@ export class Info {
 	/**
 	 * Author  of info
 	 */
-	private readonly _author: string = "Jonas Pfalzgraf / JosunLP"
+	private readonly _author: string = "josunlp"
 
 	/**
 	 * License  of info

@@ -1,5 +1,5 @@
 import { Call } from "./model/call";
-import { Info } from "./model/info";
+import { Info } from "./class/info";
 import { Generator } from "./controller/generator";
 import { TemplateInjector } from "./controller/templateInjector";
 import { ImportTemplate } from "./model/importTemplate";
