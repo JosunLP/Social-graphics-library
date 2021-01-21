@@ -1,5 +1,5 @@
 import { Call } from "./model/call";
-import { Info } from "./model/info";
+import { Info } from "./class/info";
 import { Generator } from "./controller/generator";
 import { TemplateInjector } from "./controller/templateInjector";
 import { ImportTemplate } from "./model/importTemplate";
@@ -9,13 +9,16 @@ import { ImportTemplate } from "./model/importTemplate";
  */
 export default class SocialGraphicsLibrary {
 
+	/**
+	 * Creates an instance of social graphics library.
+	 */
+	constructor() {
+		this.templateInject = new TemplateInjector()
+	}
+
 	//#region properties
 	private templateInject: TemplateInjector;
 	//#endregion
-
-	constructor() {
-		this.templateInject = new TemplateInjector();
-	}
 
 	//#region generator
 	/**
@@ -78,6 +81,6 @@ export default class SocialGraphicsLibrary {
 	/**
 	 * Version of social graphics library
 	 */
-	public static readonly VERSION: string = new Info().getVersion()
+	public static readonly VERSION: string = new Info().version
 	//#endregion
 }

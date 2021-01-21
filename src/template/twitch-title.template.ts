@@ -29,7 +29,7 @@ export class Twitch_Template {
 			'  </g>\n' +
 			'  <g fill="#2e4263" font-size="60.109">\n' +
 			'    <text font-family="\'BremenBT-Bold\',\'Bremen Bd BT\',fantasy" transform="translate(923.172 338.537) scale(.8034)">\n' +
-			'      /\n' +
+			'      \/\n' +
 			'    </text>\n' +
 			'    <text x="15.321" font-family="\'Arial-Black\',\'Arial\',sans-serif" font-weight="900" transform="translate(923.172 338.537) scale(.8034)">\n' +
 			teamName +

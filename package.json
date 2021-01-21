@@ -8,13 +8,13 @@
         "dev:deploy:linux": "npm install && npm run version:update:linux && npm run dev:build && npm run dev:test",
         "dev:run": "webpack serve",
         "dev:test": "node tests",
-        "version:update:windows": "version.sh",
-        "version:update:linux": "sh ./version.sh",
+        "version:update:windows": "update.sh",
+        "version:update:linux": "sh ./update.sh",
         "prod:deploy:win": "npm run dev:deploy:win && npm publish",
         "prod:deploy:linux": "npm run dev:deploy:linux && npm publish"
     },
     "main": "./dist/sgl.bundle.js",
-    "module": "src/glc.ts",
+    "module": "./dist/sgl.bundle.js",
     "private": false,
     "repository": {
         "type": "git",

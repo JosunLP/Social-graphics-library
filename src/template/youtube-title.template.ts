@@ -29,7 +29,7 @@ export class Youtube_Template {
 			'  </g>\n' +
 			'  <g fill="#2e4263" font-size="60.109">\n' +
 			'    <text font-family="\'BremenBT-Bold\',\'Bremen Bd BT\',fantasy" transform="matrix(.83402 0 0 .83402 1242.43 822.32)">\n' +
-			'      /\n' +
+			'      \/\n' +
 			'    </text>\n' +
 			'    <text x="15.321" font-family="\'Arial-Black\',\'Arial\',sans-serif" font-weight="900" transform="matrix(.83402 0 0 .83402 1242.43 822.32)">\n' +
 			teamName +
