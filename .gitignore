@@ -189,5 +189,6 @@ typings/
 
 .idea
 .vscode
+.vs
 
 package-lock.json
