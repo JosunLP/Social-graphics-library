@@ -9,16 +9,16 @@ import { ImportTemplate } from "./model/importTemplate";
  */
 export default class SocialGraphicsLibrary {
 
+	//#region properties
+	private readonly templateInject: TemplateInjector;
+	//#endregion
+
 	/**
 	 * Creates an instance of social graphics library.
 	 */
 	constructor() {
 		this.templateInject = new TemplateInjector()
 	}
-
-	//#region properties
-	private templateInject: TemplateInjector;
-	//#endregion
 
 	//#region generator
 	/**
@@ -81,6 +81,6 @@ export default class SocialGraphicsLibrary {
 	/**
 	 * Version of social graphics library
 	 */
-	public static readonly VERSION: string = new Info().version
+	public static readonly VERSION: string = new Info()._version
 	//#endregion
 }

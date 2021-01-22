@@ -4,11 +4,11 @@ import { ImportTemplate } from "./model/importTemplate";
  * Social graphics library
  */
 export default class SocialGraphicsLibrary {
+    private readonly templateInject;
     /**
      * Creates an instance of social graphics library.
      */
     constructor();
-    private templateInject;
     /**
      * Generators social graphics library
      * @param teamName

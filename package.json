@@ -13,9 +13,11 @@
         "prod:deploy:win": "npm run dev:deploy:win && npm publish",
         "prod:deploy:linux": "npm run dev:deploy:linux && npm publish"
     },
+    "browser": "./dist/sgl.bundle.js",
     "main": "./dist/sgl.bundle.js",
-    "module": "./dist/sgl.bundle.js",
-    "private": false,
+    "module": "./src/glc.ts",
+    "type": "commonjs",
+    "private": true,
     "repository": {
         "type": "git",
         "url": "https://github.com/JosunLP/Social-graphics-library"

@@ -2,38 +2,28 @@
  * Info
  */
 export declare class Info {
-    version: string;
-    author: string;
-    license: string;
-    repository: string;
-    homepage: string;
-    install: string;
-    /**
-     * Creates an instance of info.
-     */
-    constructor();
     /**
      * Version  of info
      */
-    private readonly _version;
+    readonly _version: string;
     /**
      * Author  of info
      */
-    private readonly _author;
+    readonly _author: string;
     /**
      * License  of info
      */
-    private readonly _license;
+    readonly _license: string;
     /**
      * Repository  of info
      */
-    private readonly _repository;
+    readonly _repository: string;
     /**
      * Repository  of info
      */
-    private readonly _homepage;
+    readonly _homepage: string;
     /**
      * Install  of info
      */
-    private readonly _install;
+    readonly _install: string;
 }

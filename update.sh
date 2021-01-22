@@ -24,12 +24,12 @@ change_line() {
 }
 
 
-change_line 'private readonly _version: string = '  "	private readonly _version: string = \"${VERSION}\"" ./src/class/info.ts
+change_line 'public readonly _version: string = '  "	public readonly _version: string = \"${VERSION}\"" ./src/class/info.ts
 
-change_line 'private readonly _author: string = '  "	private readonly _author: string = \"${AUTHOR}\"" ./src/class/info.ts
+change_line 'public readonly _author: string = '  "	public readonly _author: string = \"${AUTHOR}\"" ./src/class/info.ts
 
-change_line 'private readonly _license: string = '  "	private readonly _license: string = \"${LICENSE}\"" ./src/class/info.ts
+change_line 'public readonly _license: string = '  "	public readonly _license: string = \"${LICENSE}\"" ./src/class/info.ts
 
-change_line 'private readonly _repository: string = '  "	private readonly _repository: string = \"${REPOSITORY}\"" ./src/class/info.ts
+change_line 'public readonly _repository: string = '  "	public readonly _repository: string = \"${REPOSITORY}\"" ./src/class/info.ts
 
-change_line 'private readonly _homepage: string = '  "	private readonly _homepage: string = \"${HOMEPAGE}\"" ./src/class/info.ts
+change_line 'public readonly _homepage: string = '  "	public readonly _homepage: string = \"${HOMEPAGE}\"" ./src/class/info.ts
