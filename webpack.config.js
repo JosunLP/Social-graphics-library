@@ -1,8 +1,8 @@
 const path = require('path');
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     target: 'web',
-    entry: './src/glc.ts',
+    entry: './src/SocialGraphicsLibrary.ts',
     watch: false,
     stats: {
         warnings: false

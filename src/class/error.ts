@@ -3,6 +3,9 @@
  */
 export class ErrorRespose {
 
+	/**
+	 * Prefix  of error respose
+	 */
 	private static readonly _prefix = "[sgl-error] "
 
 	/**
@@ -19,4 +22,9 @@ export class ErrorRespose {
 	 * Wrong type of error respose
 	 */
 	public static readonly wrongType = ErrorRespose._prefix + "The type returned does not match the expected result!"
+
+	/**
+	 * Wrong template property of error respose
+	 */
+	public static readonly wrongTemplateProperty = ErrorRespose._prefix + "One of the injected templates is missing a property!"
 }

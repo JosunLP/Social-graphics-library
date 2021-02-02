@@ -15,7 +15,7 @@
     },
     "browser": "./dist/sgl.bundle.js",
     "main": "./dist/sgl.bundle.js",
-    "module": "./src/glc.ts",
+    "module": "./src/SocialGraphicsLibrary.ts",
     "type": "commonjs",
     "private": true,
     "repository": {

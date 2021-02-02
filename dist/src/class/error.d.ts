@@ -2,6 +2,9 @@
  * Error respose
  */
 export declare class ErrorRespose {
+    /**
+     * Prefix  of error respose
+     */
     private static readonly _prefix;
     /**
      * Blob state of error respose
@@ -15,4 +18,8 @@ export declare class ErrorRespose {
      * Wrong type of error respose
      */
     static readonly wrongType: string;
+    /**
+     * Wrong template property of error respose
+     */
+    static readonly wrongTemplateProperty: string;
 }
