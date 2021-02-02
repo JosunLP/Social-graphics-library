@@ -1,4 +1,4 @@
-import SocialGraphicsLibrary from "./dist/sgl.bundle.js";
+import "./dist/sgl.bundle.js";
 
 var sgl = new SocialGraphicsLibrary();
 
