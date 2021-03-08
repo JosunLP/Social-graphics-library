@@ -14,10 +14,7 @@ module.exports = {
         libraryTarget: 'umd',
         umdNamedDefine: true,
         library: 'SocialGraphicsLibrary',
-        scriptType: 'module',
-        libraryExport: 'default',
-        globalObject: 'this',
-        compareBeforeEmit: true
+        libraryExport: 'default'
     },
     module: {
         rules: [{
